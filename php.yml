@@ -1,0 +1,25 @@
+---
+ - hosts: dev01user.example.com
+   gather_facts: no
+   become: yes
+   
+   tasks:
+   - name: Install Apache package and PHP Packages
+     package: 
+	     name: "{{item}}"
+		 update_cache: yes
+		 state: present
+	 with_items:
+     - httpd
+     - php
+     - php-fpm
+     
+   - name: Copy the info.php file to the CentOS node
+     copy: 
+       src: /tmp/gitproject/info.php 
+       dest: /var/www/html
+
+   - name: Restart apache service
+     service: 
+        name: httpd
+        state: restarted
